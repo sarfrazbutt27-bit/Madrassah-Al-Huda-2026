@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Madrassah Al-Huda - Management Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              madrassah: {
+                50: '#fdf4ff',
+                100: '#fae8ff',
+                200: '#f5d0fe',
+                300: '#f0abfc',
+                400: '#e879f9',
+                500: '#d946ef',
+                600: '#c026d3',
+                700: '#a21caf',
+                800: '#86198f',
+                900: '#701a75',
+                950: 'var(--primary-color, #3f0042)',
+              },
+              gold: {
+                50: '#fffbeb',
+                100: '#fef3c7',
+                200: '#fde68a',
+                300: '#fcd34d',
+                400: '#fbbf24',
+                500: 'var(--secondary-color, #f59e0b)',
+                600: '#d97706',
+                700: '#b45309',
+                800: '#92400e',
+                950: '#451a03',
+              }
+            },
+            fontFamily: {
+              sans: ['Plus Jakarta Sans', 'sans-serif'],
+              serif: ['Playfair Display', 'serif'],
+              amiri: ['Amiri', 'serif'],
+              quran: ['Scheherazade New', 'serif'],
+            },
+          },
+        },
+      }
+    </script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Amiri:wght@400;700&family=Scheherazade+New:wght@400;700&display=swap');
+      
+      :root {
+        --primary-color: #3f0042;
+        --secondary-color: #f59e0b;
+      }
+      
+      body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .islamic-pattern {
+        background-color: transparent;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%233f0042' fill-opacity='0.03'%3E%3Cpath d='M0 0h80v80H0z' fill='none'/%3E%3Cpath d='M40 0l5 15 15 5-15 5-5 15-5-15-15-5 15-5zM0 40l5 15 15 5-15 5-5 15-5-15-15-5 15-5zM80 40l5 15 15 5-15 5-5 15-5-15-15-5 15-5zM40 80l5 15 15 5-15 5-5 15-5-15-15-5 15-5z'/%3E%3C/g%3E%3C/svg%3E");
+      }
+
+      .gradient-bg {
+        background: radial-gradient(circle at top right, #4a044e, #1e1b4b);
+      }
+
+      @media print {
+        .no-print { display: none !important; }
+        .print-only { display: block !important; }
+        body { background: white !important; }
+        .print-shadow-none { box-shadow: none !important; }
+      }
+
+      ::-webkit-scrollbar { width: 6px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: #3f004230; border-radius: 10px; }
+      ::-webkit-scrollbar-thumb:hover { background: #3f004260; }
+
+      .fade-in { animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      /* Tajweed Colors for Quran.com & Tanzil Markup */
+      /* Ghunnah & Lam Jalalah - Red */
+      .tajweed-ghunnah, .ghn, .ghunnah, [class*="ghn"], .lam, .lam_jalalah, [class*="lam"], .tajweed-lam_jalalah { color: #ff0000 !important; font-weight: bold; }
+      
+      /* Madd Rules - Blue/Green */
+      .tajweed-madd_obligatory, .mnd, .madd_obligatory, .m_o, [class*="mnd"], [class*="m_o"], .m_a, [class*="m_a"], .tajweed-madd_obligatory { color: #2196f3 !important; }
+      .tajweed-madd_permissible, .madd_permissible, .m_p, [class*="m_p"], .tajweed-madd_permissible { color: #4caf50 !important; }
+      .tajweed-madd_long, .madd_long, .m_l, [class*="m_l"], .tajweed-madd_long { color: #1976d2 !important; }
+      
+      /* Ikhfa - Purple */
+      .tajweed-ikhfa, .ikh, .ikhfa, [class*="ikh"], .tajweed-ikhfa { color: #9c27b0 !important; }
+      
+      /* Idgham - Orange/Gray */
+      .tajweed-idgham_with_ghunnah, .idg, .idgm, .idgham_with_ghunnah, [class*="idg"], [class*="idgm"], .tajweed-idgham_with_ghunnah { color: #ff9800 !important; }
+      .tajweed-idgham_without_ghunnah, .idgw, .idgham_without_ghunnah, [class*="idgw"], .tajweed-idgham_without_ghunnah { color: #757575 !important; }
+      
+      /* Qalqalah - Pink */
+      .tajweed-qalqalah, .qlq, .qalqalah, [class*="qlq"], .tajweed-qalqalah { color: #e91e63 !important; }
+      
+      /* Iqlab - Cyan */
+      .tajweed-iqlab, .iql, .iqlab, [class*="iql"], .tajweed-iqlab { color: #00bcd4 !important; }
+      
+      /* Others - Gray/Orange-Red */
+      .tajweed-hamzat_wasl, .ham, .hamzat_wasl, [class*="ham"], .tajweed-hamzat_wasl { color: #aaaaaa !important; }
+      .tajweed-sls, .sls, .silah, .sil, [class*="sls"], [class*="sil"], .tajweed-sls { color: #ff5722 !important; }
+      
+      /* Ensure spans are visible and correctly styled */
+      .quran-text-container span {
+        display: inline !important;
+        white-space: normal !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: transparent !important;
+      }
+
+      /* Default color for non-marked text */
+      .quran-text-container {
+        color: #1a1a1a;
+      }
+
+      /* Generic Tajweed support for any tz- class */
+      .quran-text-container span[class^="tz-"], 
+      .quran-text-container span[class*=" tz-"] { 
+        font-weight: bold !important; 
+        display: inline !important;
+        font-style: normal !important;
+        text-decoration: none !important;
+      }
+
+      /* Tanzil specific classes with extreme specificity */
+      .quran-text-container .tz-h, .quran-text-container .tz-ham { color: #888888 !important; } /* Hamzat Wasl - Gray */
+      .quran-text-container .tz-s, .quran-text-container .tz-sls { color: #ff4400 !important; } /* Silah - Orange Red */
+      .quran-text-container .tz-l, .quran-text-container .tz-lam { color: #cc0000 !important; font-weight: bold !important; } /* Lam Jalalah - Dark Red */
+      .quran-text-container .tz-n, .quran-text-container .tz-ghn { color: #ff0000 !important; font-weight: bold !important; } /* Ghunnah - Red */
+      .quran-text-container .tz-v, .quran-text-container .tz-mnd { color: #0000ff !important; font-weight: bold !important; } /* Madd Obligatory - Blue */
+      .quran-text-container .tz-w, .quran-text-container .tz-m_p { color: #00aa00 !important; font-weight: bold !important; } /* Madd Permissible - Green */
+      .quran-text-container .tz-y, .quran-text-container .tz-m_l { color: #0000aa !important; font-weight: bold !important; } /* Madd Long - Dark Blue */
+      .quran-text-container .tz-m { color: #0000ff !important; font-weight: bold !important; } /* Madd General - Blue */
+      .quran-text-container .tz-q, .quran-text-container .tz-qlq { color: #ff00ff !important; font-weight: bold !important; } /* Qalqalah - Magenta/Pink */
+      .quran-text-container .tz-i, .quran-text-container .tz-iql { color: #00bbbb !important; font-weight: bold !important; } /* Iqlab - Cyan */
+      .quran-text-container .tz-f, .quran-text-container .tz-ikh { color: #aa00aa !important; font-weight: bold !important; } /* Ikhfa - Purple */
+      .quran-text-container .tz-p { color: #aa00aa !important; font-weight: bold !important; } /* Ikhfa General - Purple */
+      .quran-text-container .tz-c { color: #aa00aa !important; font-weight: bold !important; } /* Ikhfa Shafawi - Purple */
+      .quran-text-container .tz-g, .quran-text-container .tz-idg { color: #ff8800 !important; font-weight: bold !important; } /* Idgham with Ghunnah - Orange */
+      .quran-text-container .tz-j { color: #ff8800 !important; font-weight: bold !important; } /* Idgham Shafawi - Orange */
+      .quran-text-container .tz-u, .quran-text-container .tz-idgw { color: #666666 !important; } /* Idgham without Ghunnah - Dark Gray */
+      .quran-text-container .tz-k { color: #1a1a1a !important; } /* Izhar Shafawi (Normal) */
+    </style>
+    <script type="importmap">
+    {
+      "imports": {
+        "react-router-dom": "https://esm.sh/react-router-dom@^7.13.0",
+        "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+        "react/": "https://esm.sh/react@^19.2.4/",
+        "react": "https://esm.sh/react@^19.2.4",
+        "lucide-react": "https://esm.sh/lucide-react@^0.563.0",
+        "@google/genai": "https://esm.sh/@google/genai@^1.39.0",
+        "html-to-image": "https://esm.sh/html-to-image@^1.11.11",
+        "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@^2.48.1",
+        "framer-motion": "https://esm.sh/framer-motion@^12.34.3"
+      }
+    }
+    </script>
+  </head>
+  <body class="bg-[#fafafa] text-gray-900 overflow-x-hidden islamic-pattern min-h-screen">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
