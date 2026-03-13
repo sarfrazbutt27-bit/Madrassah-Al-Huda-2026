@@ -179,39 +179,6 @@ const CertificateView: React.FC<Props> = ({ students, grades, user }) => {
     }, 100);
   };
 
-  const silsila = [
-    "Shaikh Sarfraz bin ʿAẓmatullāh",
-    "al-Qārī al-Muqriʾ Imtiyāz bin Aḥmad al-Walī",
-    "Shaykh Faḍl al-Raḥmān al-Aʿẓamī",
-    "Shaykh Muṣṭafā al-Aʿẓamī",
-    "Shaykh Riyāsat ʿAlī",
-    "Shaykh Ḍiyāʾ al-Dīn",
-    "Shaykh ʿAbd al-Raḥmān Makkī bin Bashīr Khān",
-    "Shaykh Ibrāhīm Saʿd al-Shāfiʿī",
-    "Shaykh Ḥasan Badīr",
-    "Shaykh Muḥammad al-Mutawallī",
-    "Shaykh Sayyid Aḥmad al-Durrī",
-    "Shaykh Aḥmad (Salmūnah)",
-    "Shaykh Sayyid Ibrāhīm ʿUbaydī",
-    "Shaykh ʿAbd al-Raḥmān al-Ajhūrī",
-    "Shaykh Aḥmad al-Baqrī",
-    "Shaykh Muḥammad al-Baqrī",
-    "Shaykh ʿAbd al-Raḥmān al-Yamanī",
-    "Shaykh Shaḥādhah al-Yamanī",
-    "Shaykh ʿAbd al-Ḥaqq al-Sunbāṭī",
-    "Shaykh Zakariyyā al-Anṣārī",
-    "Shaykh Riḍwān al-ʿUqbī",
-    "Shaykh Muḥammad al-Nuwairī",
-    "Imam Ibn al-Jazarī",
-    "Abū al-Maʿālī Muḥammad ibn al-Labbān",
-    "Shaykh Aḥmad (Schwiegersohn v. ash-Shāṭibī)",
-    "Imam Abū al-Qāsim ash-Shāṭibī",
-    "Imam Abū ʿAmr ad-Dānī",
-    "Imam Ḥafṣ bin Sulaymān",
-    "ʿAlī ibn Abī Ṭālib رضي الله عنه",
-    "Prophet Muḥammad ﷺ"
-  ];
-
   return (
     <div className="min-h-screen bg-stone-100 print:bg-white pb-20 font-serif">
       <div className="no-print p-6 bg-madrassah-950 text-white flex items-center justify-between sticky top-0 z-50 shadow-2xl">
@@ -326,6 +293,7 @@ const CertificateView: React.FC<Props> = ({ students, grades, user }) => {
                      <div className="h-[1px] bg-amber-900 w-full mb-1 opacity-40"></div>
                      <p className="text-[9px] font-black uppercase tracking-widest text-stone-500 italic">Institutsleitung</p>
                      <p className="text-md font-black italic text-stone-800 leading-none">Shaikh Sarfraz Azmat Butt</p>
+                     <p className="text-sm font-bold text-stone-600 mt-1" dir="rtl">الشيخ سرفراز أعظم بٹ</p>
                   </div>
                   <div className="text-center">
                      <div className="h-[1px] bg-amber-900 w-full mb-1 opacity-40"></div>
@@ -362,14 +330,52 @@ const CertificateView: React.FC<Props> = ({ students, grades, user }) => {
                     </div>
                  </div>
 
-                 <div className="w-full max-w-5xl p-8 border-2 border-amber-900/10 rounded-[3rem] bg-stone-50/30 mb-8 mx-auto silsila-container flex-1">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-2 text-left text-[9px] font-serif italic text-stone-700 leading-tight">
-                       {silsila.map((name, i) => (
-                          <div key={i} className="flex gap-2 border-b border-stone-200/80 pb-1 silsila-item items-center">
-                             <span className="font-black text-amber-800 w-6 text-[10px]">{i + 1}.</span>
-                             <span className={i === 0 || i === silsila.length - 1 ? 'font-black text-stone-950 text-[10px]' : ''}>{name}</span>
-                          </div>
-                       ))}
+                 <div className="w-full max-w-5xl p-12 border-2 border-amber-900/10 rounded-[3rem] bg-stone-50/30 mb-8 mx-auto silsila-container flex-1 flex flex-col justify-center" dir="rtl">
+                    <div className="text-right text-[11px] font-serif text-stone-800 leading-relaxed whitespace-pre-wrap">
+                       {`الحمد لله الذي أنزل القرآن هدى للناس وبينات من الهدى والفرقان، والصلاة والسلام على سيدنا محمد خير من تلا كتاب الله وأقرأه، وعلى آله وصحبه ومن تبعهم بإحسان إلى يوم الدين.
+أما بعد:
+فإن الطالب ${student.firstName} ${student.lastName} قد قرأ عليَّ القرآن الكريم كاملاً من أوله إلى آخره برواية حفص عن عاصم من طريق الشاطبية قراءةً صحيحةً مجودةً متقنةً، وقد استوفى ما يلزم في هذا الفن من أحكام التجويد وأداء الحروف على وجهها الصحيح.
+فأجزته أن يقرأ ويُقرئ القرآن الكريم برواية حفص عن عاصم من طريق الإمام الشاطبي، وأذنت له أن يروي ذلك عني بسندي المتصل إلى رسول الله ﷺ.
+وسندي في ذلك:
+عن المقرئ مولانا يوسف بن عبد الله دروان
+عن العلامة فضل الرحمن الأعظمي
+ح (تحويل السند)
+وقد أجازني المقرئ مولانا امتياز أحمد ولي
+عن العلامة فضل الرحمن الأعظمي
+عن الشيخ مصطفى الأعظمي
+عن الشيخ رياست علي
+عن الشيخ ضياء الدين بن أحمد
+عن الشيخ عبد الرحمن بن محمد بشير خان المكي
+عن الشيخ عبد الله خان بن محمد بشير خان
+عن الشيخ إبراهيم سعد بن علي
+عن الشيخ حسن بن بدير الجريسي الكبير
+وهو قرأ العشر الصغرى عن الشيخ أحمد الدري التهامي
+وقرأ العشر الكبرى عن الشيخ محمد المتولي
+عن الشيخ أحمد الدري التهامي
+عن الشيخ أحمد بن محمد سلمونة
+عن الشيخ سيد إبراهيم العبيدي
+عن مشايخ منهم الشيخ عبد الرحمن الأجهوري
+عن مشايخ منهم الشيخ أحمد بن رجب البقري
+عن الشيخ محمد بن القاسم البقري
+عن الشيخ عبد الرحمن اليمني
+عن والده الشيخ شحاذة اليمني
+ثم عن الشيخ أحمد بن عبد الحق السنباطي
+عن الشيخ شحاذة المذكور
+عن مشايخ منهم الشيخ ناصر الدين محمد بن سالم بن علي الطَبَلَاوي
+عن شيخ الإسلام زكريا الأنصاري
+عن مشايخ منهم الشيخ أبو نعيم رضوان بن محمد بن يوسف العُقبي
+والشيخ أحمد بن أبي بكر بن يوسف القلقيلي
+والشيخ طاهر بن محمد النويري
+وهم عن الإمام شمس الدين محمد بن محمد بن محمد بن علي بن يوسف الجزري محرر هذا الفن
+عن مشايخه
+عن الإمام أبي القاسم الشاطبي صاحب حرز الأماني ووجه التهاني
+عن الإمام أبي عمرو عثمان بن سعيد الداني صاحب التيسير
+بسنده المتصل إلى رسول الله ﷺ
+عن جبريل عليه السلام
+عن رب العزة جل جلاله.
+وقد أجزته بذلك إجازةً صحيحةً معتبرةً على ما جرى عليه عمل أهل هذا الشأن.
+والله تعالى أسأل أن يجعله من أهل القرآن الذين هم أهل الله وخاصته، وأن ينفع به الإسلام والمسلمين.
+وصلى الله على سيدنا محمد وعلى آله وصحبه وسلم.`}
                     </div>
                  </div>
 
@@ -378,6 +384,7 @@ const CertificateView: React.FC<Props> = ({ students, grades, user }) => {
                        <div className="h-[1px] bg-amber-900 w-full mb-1 opacity-40"></div>
                        <p className="text-[9px] font-black uppercase tracking-widest text-stone-500 italic">Institutsleitung</p>
                        <p className="text-md font-black italic text-stone-800 leading-none">Shaikh Sarfraz Azmat Butt</p>
+                       <p className="text-sm font-bold text-stone-600 mt-1" dir="rtl">الشيخ سرفراز أعظم بٹ</p>
                     </div>
                     <div className="text-center">
                        <div className="h-[1px] bg-amber-900 w-full mb-1 opacity-40"></div>

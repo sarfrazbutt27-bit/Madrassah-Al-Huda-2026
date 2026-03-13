@@ -41,7 +41,7 @@ const FinanceManagement: React.FC<FinanceManagementProps> = ({ students, users, 
     if (!teacher) return 0;
     const title = teacher.teacherTitle;
     if (title === 'Alim' || title === 'Alima' || title === 'Imam') return 500;
-    if (title === 'Quran Lehrer' || title === 'Tajweed Lehrer' || title === 'Arabisch Lehrer') return 300;
+    if (title === 'Yassarnal Quran Lehrer' || title === 'Tajweed Lehrer' || title === 'Arabisch Lehrer') return 300;
     return 200;
   }, []);
 

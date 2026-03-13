@@ -22,7 +22,7 @@ const ReportManager: React.FC<ReportManagerProps> = ({ user, students, subjects,
 
   const isTeacher = user.role === UserRole.TEACHER;
   const isPrincipal = user.role === UserRole.PRINCIPAL;
-  const assignedClasses = user.assignedClasses || [];
+  const assignedClasses = useMemo(() => user.assignedClasses || [], [user.assignedClasses]);
 
   const availableClasses = useMemo(() => {
     const classes = isPrincipal 

@@ -33,7 +33,7 @@ const CurriculumEditorModal: React.FC<CurriculumEditorModalProps> = ({
     status: 'draft'
   });
 
-  const subjects = ['Quran', 'Tajweed', 'Hifz', 'Fiqh', 'Sierah', 'Arabisch', 'Arabisch Modul 1', 'Arabisch Modul 2', 'Arabisch Modul 3', 'Akhlaq', 'Hadieth', 'Usul-ul-Hadieth', 'Aqeedah', 'Usul-ul-Fiqh', 'Ilmiyyah', 'Imam', 'Ziele'];
+  const subjects = ['Yassarnal Quran', 'Tajweed', 'Hifz', 'Fiqh', 'Sierah', 'Arabisch', 'Arabisch Modul 1', 'Arabisch Modul 2', 'Arabisch Modul 3', 'Akhlaq', 'Hadieth', 'Usul-ul-Hadieth', 'Aqeedah', 'Usul-ul-Fiqh', 'Ilmiyyah', 'Imam', 'Ziele'];
 
   useEffect(() => {
     if (item) {

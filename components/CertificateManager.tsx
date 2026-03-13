@@ -18,7 +18,7 @@ const CertificateManager: React.FC<Props> = ({ user, students, grades }) => {
   const [classFilter, setClassFilter] = useState('Alle');
 
   const isAdmin = user.role === UserRole.PRINCIPAL;
-  const assignedClasses = user.assignedClasses || [];
+  const assignedClasses = useMemo(() => user.assignedClasses || [], [user.assignedClasses]);
 
   const availableClasses = useMemo(() => {
     const classes = isAdmin 

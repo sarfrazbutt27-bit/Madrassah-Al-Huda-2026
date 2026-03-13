@@ -31,7 +31,7 @@ const CurriculumManager: React.FC<Props> = ({ user, curricula, onUpdate, student
   const isTeacher = user.role === UserRole.TEACHER;
   const isStudent = user.role === UserRole.STUDENT;
   const isStaff = isAdmin || isTeacher;
-  const assignedClasses = user.assignedClasses || [];
+  const assignedClasses = useMemo(() => user.assignedClasses || [], [user.assignedClasses]);
 
   const student = isStudent ? students.find(s => s.id === user.id) : null;
   const studentClass = student?.className;

@@ -5,7 +5,7 @@ import {
   LogOut, UserCheck, Users, ClipboardCheck, 
   Euro, UserPlus, Hourglass, IdCard, Briefcase, 
   QrCode, FileText, LayoutDashboard, Book, RefreshCw, FileEdit, Award, MessageSquare, FolderOpen, Brain, GraduationCap as ExamIcon,
-  BookOpen, Library
+  BookOpen, Library, Database, Share2
 } from 'lucide-react';
 import { 
   User, UserRole, Student, Grade, Attendance, ClassConfig, WaitlistEntry, ParticipationRecord, TeacherAttendance, Resource, QuizResult,
@@ -44,7 +44,6 @@ import CertificateView from './components/CertificateView';
 import CertificateManager from './components/CertificateManager';
 import CurriculumPage from './components/CurriculumPage';
 import TheoryManager from './components/TheoryManager';
-import QuranPractice from './src/components/QuranPractice';
 import PrintableRegistrationForm from './components/PrintableRegistrationForm';
 import PublicEnrollmentForm from './components/PublicEnrollmentForm';
 import WaitlistStatusCheck from './components/WaitlistStatusCheck';
@@ -54,6 +53,10 @@ import HomeworkReportsPrintView from './components/HomeworkReportsPrintView';
 import CommunicationCenter from './components/CommunicationCenter';
 import LibraryManager from './components/LibraryManager';
 import LogoIcon from './components/LogoIcon';
+import SqlExplorer from './components/SqlExplorer';
+import YassarnalQuranSelection from './components/YassarnalQuran/YassarnalQuranSelection';
+import YassarnalQuranTeil1 from './components/YassarnalQuran/YassarnalQuranTeil1';
+import YassarnalQuranTeil2 from './components/YassarnalQuran/YassarnalQuranTeil2';
 
 const DEFAULT_ADMIN: User = { id: "admin-fixed", name: "Sarfraz Azmat Butt", role: UserRole.PRINCIPAL, password: "admin" };
 
@@ -85,8 +88,13 @@ const NavLinkItem: React.FC<{ to: string, icon: React.ReactNode, label: string, 
 
 const App: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<User | null>(() => {
-    const saved = localStorage.getItem('huda_user');
-    return saved ? JSON.parse(saved) : null;
+    try {
+      const saved = localStorage.getItem('huda_user');
+      return saved ? JSON.parse(saved) : null;
+    } catch (e) {
+      console.error("Failed to parse user from localStorage", e);
+      return null;
+    }
   });
 
   const [dbStudents, setDbStudents] = useState<Student[]>([]);
@@ -94,7 +102,7 @@ const App: React.FC = () => {
   const [grades, setGrades] = useState<Grade[]>([]);
   const [attendance, setAttendance] = useState<Attendance[]>([]);
   const [tAttendance, setTAttendance] = useState<TeacherAttendance[]>([]);
-  const [subjects] = useState<string[]>(['Quran', 'Tajweed', 'Hifz', 'Fiqh', 'Sierah', 'Arabisch', 'Arabisch Modul 1', 'Arabisch Modul 1', 'Arabisch Modul 3', 'Akhlaq', 'Hadieth', 'Usul-ul-Hadieth', 'Aqeedah', 'Usul-ul-Fiqh']);
+  const [subjects] = useState<string[]>(['Yassarnal Quran', 'Tajweed', 'Hifz', 'Fiqh', 'Sierah', 'Arabisch', 'Arabisch Modul 1', 'Arabisch Modul 2', 'Arabisch Modul 3', 'Akhlaq', 'Hadieth', 'Usul-ul-Hadieth', 'Aqeedah', 'Usul-ul-Fiqh']);
   const [waitlist, setWaitlist] = useState<WaitlistEntry[]>([]);
   const [classConfigs, setClassConfigs] = useState<ClassConfig[]>([]);
   const [participation, setParticipation] = useState<ParticipationRecord[]>([]);
@@ -361,7 +369,7 @@ const App: React.FC = () => {
       })));
 
       const { data: qResults } = await supabase.from('quiz_results').select('*');
-      if (qResults) setQuizResults(qResults.map(q => ({
+      if (qResults) setQuizResults(qResults.map((q: any) => ({
         id: q.id,
         studentId: q.student_id,
         resourceId: q.resource_id,
@@ -564,6 +572,38 @@ const App: React.FC = () => {
     setCurrentUser(null);
   };
 
+  const handleShareApp = () => {
+    // Force the use of the public 'ais-pre' URL for sharing
+    // This ensures that even if the admin is in the 'ais-dev' environment,
+    // the shared link will work for everyone else.
+    let baseUrl = window.location.origin + window.location.pathname;
+    
+    // Replace dev prefix with pre prefix if necessary
+    if (baseUrl.includes('ais-dev-')) {
+      baseUrl = baseUrl.replace('ais-dev-', 'ais-pre-');
+    }
+    
+    const shareUrl = baseUrl.endsWith('/') ? `${baseUrl}#/yassarnal-quran` : `${baseUrl}/#/yassarnal-quran`;
+    
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      alert("Öffentlicher Teilungs-Link wurde kopiert! Diesen Link können Sie an Eltern/Schüler senden.");
+    }).catch(err => {
+      console.error('Fehler beim Kopieren:', err);
+      // Fallback for older browsers or restricted environments
+      const textArea = document.createElement("textarea");
+      textArea.value = shareUrl;
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        alert("Teilungs-Link (Direkt zu Yassarnal Quran) wurde kopiert!");
+      } catch (e) {
+        alert("Link: " + shareUrl);
+      }
+      document.body.removeChild(textArea);
+    });
+  };
+
   const isAdminUser = currentUser?.role === UserRole.PRINCIPAL;
   const isTeacherUser = currentUser?.role === UserRole.TEACHER;
   const isStudentUser = currentUser?.role === UserRole.STUDENT;
@@ -584,6 +624,29 @@ const App: React.FC = () => {
     if (error) {
       console.error("Fehler beim Löschen des Schülers:", error);
       fetchAllData(true); // Liste bei Fehler wiederherstellen
+    }
+  };
+
+  const handleDeleteWaitlistEntry = async (id: string) => {
+    if (!id) return;
+    console.log("Versuche Wartelisten-Eintrag zu löschen:", id);
+    
+    // Optimistisches Update
+    setWaitlist(prev => prev.filter(w => w.id !== id));
+    
+    try {
+      const { error } = await supabase.from('waitlist').delete().eq('id', id);
+      if (error) {
+        console.error("Fehler beim Löschen der Warteliste in Supabase:", error);
+        alert(`Fehler beim Löschen: ${error.message}`);
+        fetchAllData(true); // Wiederherstellen
+      } else {
+        console.log("Wartelisten-Eintrag erfolgreich gelöscht:", id);
+      }
+    } catch (e) {
+      console.error("Exception beim Löschen der Warteliste:", e);
+      alert("Kritischer Fehler beim Löschen der Warteliste.");
+      fetchAllData(true);
     }
   };
 
@@ -748,7 +811,16 @@ const App: React.FC = () => {
   const saveWaitlist = async (list: WaitlistEntry[], itemsToSync?: WaitlistEntry[]) => {
     setWaitlist(list);
     setSyncStatus('syncing');
+    
+    // Wenn itemsToSync nicht angegeben ist, synchronisieren wir nur die geänderten/neuen Items
+    // oder die gesamte Liste (Vorsicht: upsert löscht keine fehlenden Einträge!)
     const toSync = itemsToSync || list;
+    
+    if (toSync.length === 0) {
+      setSyncStatus('idle');
+      return true;
+    }
+
     const result = await syncToSupabase('waitlist', toSync.map(w => ({
       id: w.id,
       type: w.type,
@@ -763,6 +835,7 @@ const App: React.FC = () => {
       payment_method: w.paymentMethod,
       participants: w.participants
     })), 'id');
+    
     if (result) {
       setLastSync(new Date().toLocaleTimeString('de-DE'));
       setSyncStatus('idle');
@@ -1066,20 +1139,49 @@ const App: React.FC = () => {
   }, [syncStatus, hwAssignments, hwQuizQuestions, saveHwAssignments, saveHwQuizQuestions]);
 
   return (
-    <HashRouter>
+    <HashRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Routes>
+        {/* Public Routes MUST come first to be accessible without login */}
+        <Route path="/yassarnal-quran" element={<YassarnalQuranSelection onNavigate={(page) => window.location.hash = `#/yassarnal-quran/${page}/lessons`} />} />
+        <Route path="/yassarnal-quran/teil1" element={<YassarnalQuranTeil1 user={currentUser || undefined} onBack={() => window.location.hash = '#/yassarnal-quran'} />} />
+        <Route path="/yassarnal-quran/teil2" element={<YassarnalQuranTeil2 user={currentUser || undefined} onBack={() => window.location.hash = '#/yassarnal-quran'} />} />
+        <Route
+  path="/yassarnal-quran/teil1/lessons"
+  element={
+    <YassarnalQuranTeil1
+      user={currentUser || undefined}
+      onBack={() => window.location.hash = '#/yassarnal-quran'}
+    />
+  }
+/>
+
+<Route
+  path="/yassarnal-quran/teil2/lessons"
+  element={
+    <YassarnalQuranTeil2
+      user={currentUser || undefined}
+      onBack={() => window.location.hash = '#/yassarnal-quran'}
+    />
+  }
+/>
+        <Route path="/yassarnal-quran/teil1/:lessonId" element={<YassarnalQuranTeil1 user={currentUser || undefined} onBack={() => window.location.hash = '#/yassarnal-quran/teil1/lessons'} />} />
+        <Route path="/yassarnal-quran/teil2/:lessonId" element={<YassarnalQuranTeil2 user={currentUser || undefined} onBack={() => window.location.hash = '#/yassarnal-quran/teil2/lessons'} />} />
+
         <Route path="/portal" element={
           <div className="min-h-screen bg-[#fafafa] islamic-pattern p-6 md:p-12">
             <DataUpdateForm students={dbStudents} onUpdateStudents={(list) => saveStudents(dbStudents.map(s => list.find(l => l.id === s.id) || s), list)} isPublic />
           </div>
         } />
-        <Route path="/enroll" element={<PublicEnrollmentForm onAdd={(entry: WaitlistEntry) => saveWaitlist([...waitlist, entry])} waitlist={waitlist} />} />
+        <Route path="/enroll" element={<PublicEnrollmentForm onAdd={(entry: WaitlistEntry) => saveWaitlist([...waitlist, entry], [entry])} waitlist={waitlist} />} />
         <Route path="/status" element={<WaitlistStatusCheck waitlist={waitlist} />} />
 
         {!currentUser ? (
-          <Route path="*" element={<Login onLogin={(u) => { setCurrentUser(u); localStorage.setItem('huda_user', JSON.stringify(u)); }} />} />
+          <>
+            <Route path="/" element={<Login onLogin={(u) => { setCurrentUser(u); localStorage.setItem('huda_user', JSON.stringify(u)); }} />} />
+            <Route path="*" element={<Login onLogin={(u) => { setCurrentUser(u); localStorage.setItem('huda_user', JSON.stringify(u)); }} />} />
+          </>
         ) : (
-          <Route path="*" element={
+          <Route path="/*" element={
             <div className="min-h-screen bg-madrassah-950 flex flex-col md:flex-row font-sans">
               <aside className="no-print w-full md:w-72 bg-madrassah-950 text-white flex flex-col shrink-0 border-r border-white/5 h-screen sticky top-0 overflow-y-auto custom-scrollbar relative">
                 <div className="absolute inset-0 islamic-pattern opacity-10 pointer-events-none"></div>
@@ -1105,10 +1207,10 @@ const App: React.FC = () => {
                     <NavLinkItem to="/reports" icon={<FileText size={18} />} label="Zeugnis-Zentrale" />
                     {!isStudentUser && <NavLinkItem to="/certificates" icon={<Award size={18} />} label="Urkunden-Hub" special={true} />}
                     <NavLinkItem to="/curriculum" icon={<FolderOpen size={18} />} label="Lehrplan" />
-                    <NavLinkItem to="/quran-practice" icon={<BookOpen size={18} />} label="Quran Üben" />
                     {!isStudentUser && <NavLinkItem to="/theory-manage" icon={<Book size={18} />} label="Theorie-Verwaltung" />}
                     {isStudentUser && <NavLinkItem to="/theory" icon={<Brain size={18} />} label="Theorie & Üben" />}
                     {isStudentUser && <NavLinkItem to="/exams" icon={<ExamIcon size={18} />} label="Prüfungen" />}
+                    <NavLinkItem to="/yassarnal-quran" icon={<BookOpen size={18} />} label="Yassarnal Quran" special />
                   </div>
 
                   <div className="space-y-1">
@@ -1118,6 +1220,7 @@ const App: React.FC = () => {
                     {isAdminUser && <NavLinkItem to="/waitlist" icon={<Hourglass size={18} />} label="Warteliste" />}
                     <NavLinkItem to="/id-cards" icon={<IdCard size={18} />} label="ID-Ausweise" />
                     {isAdminUser && <NavLinkItem to="/library" icon={<Library size={18} />} label="Lehrer-Bibliothek" />}
+                    {isAdminUser && <NavLinkItem to="/sql-explorer" icon={<Database size={18} />} label="SQL Explorer" />}
                     {isAdminUser && <NavLinkItem to="/communication" icon={<MessageSquare size={18} />} label="Info-Zentrale" />}
                   </div>
 
@@ -1149,6 +1252,9 @@ const App: React.FC = () => {
 
                   <button onClick={() => fetchAllData(false)} className="w-full flex items-center justify-center gap-3 px-5 py-4 rounded-2xl bg-white/5 text-white text-[10px] font-black uppercase border border-white/10 hover:bg-white/10 hover:text-gold-400 transition-all">
                     <RefreshCw size={16} className={syncStatus === 'syncing' ? 'animate-spin' : ''} /> Cloud Abgleich
+                  </button>
+                  <button onClick={handleShareApp} className="w-full flex items-center justify-center gap-3 px-5 py-4 rounded-2xl bg-gold-400/10 text-gold-400 text-[10px] font-black uppercase border border-gold-400/20 hover:bg-gold-400 hover:text-madrassah-950 transition-all shadow-lg shadow-gold-400/10">
+                    <Share2 size={16} /> App Teilen
                   </button>
                   <button onClick={handleLogout} className="w-full flex items-center justify-center gap-3 px-5 py-4 rounded-2xl bg-red-600/10 text-red-500 text-[10px] font-black uppercase border border-red-500/20 hover:bg-red-500 hover:text-white transition-all shadow-lg shadow-red-600/10">
                     <LogOut size={16} /> Logout
@@ -1194,7 +1300,7 @@ const App: React.FC = () => {
                         students={dbStudents} 
                         waitlist={waitlist} 
                         onRegisterBulk={(list) => saveStudents([...dbStudents, ...list], list)} 
-                        onRemoveWaitlistEntry={(id) => saveWaitlist(waitlist.filter(w => w.id !== id))}
+                        onRemoveWaitlistEntry={handleDeleteWaitlistEntry}
                       />
                     ) : <Navigate to="/" />} />
                     <Route path="/edit-student/:studentId" element={isAdminUser ? (
@@ -1202,7 +1308,7 @@ const App: React.FC = () => {
                         students={dbStudents} 
                         waitlist={waitlist} 
                         onUpdate={(s)=>saveStudents(dbStudents.map(x=>x.id===s.id?s:x), [s])} 
-                        onRemoveWaitlistEntry={(id) => saveWaitlist(waitlist.filter(w => w.id !== id))}
+                        onRemoveWaitlistEntry={handleDeleteWaitlistEntry}
                       />
                     ) : <Navigate to="/" />} />
                     <Route path="/print-registration/:studentId" element={isAdminUser ? <PrintableRegistrationForm students={dbStudents} /> : <Navigate to="/" />} />
@@ -1239,7 +1345,7 @@ const App: React.FC = () => {
                     <Route path="/report-card/:studentId" element={<ReportCard user={currentUser!} students={dbStudents} subjects={subjects} grades={grades} participation={participation} onUpdateParticipation={saveParticipation} classConfigs={classConfigs} />} />
                     <Route path="/certificate/:studentId/:type" element={<CertificateView students={dbStudents} grades={grades} user={currentUser!} />} />
                     <Route path="/certificates" element={isStudentUser ? <Navigate to="/" /> : <CertificateManager user={currentUser!} students={dbStudents} grades={grades} />} />
-                    <Route path="/waitlist" element={isAdminUser ? <WaitlistManagement waitlist={waitlist} onUpdate={saveWaitlist} /> : <Navigate to="/" />} />
+                    <Route path="/waitlist" element={isAdminUser ? <WaitlistManagement waitlist={waitlist} onUpdate={saveWaitlist} onDelete={handleDeleteWaitlistEntry} /> : <Navigate to="/" />} />
                     <Route path="/waitlist/print" element={isAdminUser ? <WaitlistPrintView waitlist={waitlist} /> : <Navigate to="/" />} />
                     <Route path="/finance" element={isAdminUser ? <FinanceManagement students={dbStudents} users={users} onUpdateStudents={saveStudents} onUpdateUsers={saveUsers} /> : <Navigate to="/" />} />
                     <Route path="/finance/report/:month" element={isAdminUser ? <FinancePrintView students={dbStudents} users={users} /> : <Navigate to="/" />} />
@@ -1248,11 +1354,11 @@ const App: React.FC = () => {
                     <Route path="/users/print" element={isAdminUser ? <StaffPrintView users={users} students={dbStudents} /> : <Navigate to="/" />} />
                     <Route path="/id-cards" element={<IDCardSystem user={currentUser!} users={users} students={dbStudents} />} />
                     <Route path="/library" element={isAdminUser ? <LibraryManager resources={libraryResources} onUpdateResources={saveLibraryResources} classes={Array.from(new Set(dbStudents.map(s => s.className)))} user={currentUser!} /> : <Navigate to="/" />} />
+                    <Route path="/sql-explorer" element={isAdminUser ? <SqlExplorer /> : <Navigate to="/" />} />
                     <Route path="/communication" element={isAdminUser ? <CommunicationCenter students={dbStudents} /> : <Navigate to="/" />} />
                     <Route path="/update-data" element={<DataUpdateForm students={dbStudents} onUpdateStudents={(list) => saveStudents(dbStudents.map(s => list.find(l => l.id === s.id) || s), list)} />} />
                     <Route path="/whatsapp-qr" element={!isStudentUser ? <ClassWhatsAppManager classConfigs={classConfigs} onUpdate={saveClassConfigs} user={currentUser!} /> : <Navigate to="/" />} />
                     <Route path="/curriculum" element={<CurriculumPage user={currentUser!} />} />
-                    <Route path="/quran-practice" element={<QuranPractice currentUser={currentUser!} students={dbStudents} />} />
                     <Route path="/theory-manage" element={!isStudentUser ? <TheoryManager user={currentUser!} resources={resources} onUpdateResources={saveResources} subjects={subjects} students={dbStudents} onNotify={()=>{}} grades={grades} onUpdateGrades={saveGrades} saveQuizResult={saveQuizResult} updateAutomatedGrade={updateAutomatedGrade} calculateSubjectGrade={calculateSubjectGrade} /> : <Navigate to="/" />} />
                     <Route path="/theory" element={<TheoryManager user={currentUser!} resources={resources} onUpdateResources={saveResources} subjects={subjects} students={dbStudents} onNotify={()=>{}} grades={grades} onUpdateGrades={saveGrades} saveQuizResult={saveQuizResult} updateAutomatedGrade={updateAutomatedGrade} calculateSubjectGrade={calculateSubjectGrade} />} />
                     <Route path="/exams" element={<TheoryManager user={currentUser!} resources={resources} onUpdateResources={saveResources} subjects={subjects} students={dbStudents} onNotify={()=>{}} grades={grades} onUpdateGrades={saveGrades} saveQuizResult={saveQuizResult} updateAutomatedGrade={updateAutomatedGrade} calculateSubjectGrade={calculateSubjectGrade} />} />

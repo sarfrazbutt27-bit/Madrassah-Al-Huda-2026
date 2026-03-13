@@ -29,13 +29,13 @@ const UserManagement: React.FC<UserManagementProps> = ({ users, onUpdate, onDele
     password: '',
     whatsapp: '',
     role: UserRole.TEACHER,
-    title: 'Quran Lehrer' as TeacherTitle,
+    title: 'Yassarnal Quran Lehrer' as TeacherTitle,
     gender: 'Lehrer' as 'Lehrer' | 'Lehrerin',
     selectedClasses: [] as string[]
   });
 
   const teacherTitles: TeacherTitle[] = [
-    'Alim', 'Alima', 'Imam', 'Quran Lehrer', 'Tajweed Lehrer', 'Arabisch Lehrer', 'Aushelfer'
+    'Alim', 'Alima', 'Imam', 'Quran Lehrer', 'Yassarnal Quran Lehrer', 'Tajweed Lehrer', 'Arabisch Lehrer', 'Aushelfer'
   ];
 
   const staticClasses = [
@@ -82,7 +82,7 @@ const UserManagement: React.FC<UserManagementProps> = ({ users, onUpdate, onDele
   const resetForm = () => {
     setFormData({
       firstName: '', lastName: '', birthDate: '', username: '', email: '', password: '', 
-      whatsapp: '', role: UserRole.TEACHER, title: 'Quran Lehrer', 
+      whatsapp: '', role: UserRole.TEACHER, title: 'Yassarnal Quran Lehrer', 
       gender: 'Lehrer', selectedClasses: []
     });
     setEditingUserId(null);
@@ -99,7 +99,7 @@ const UserManagement: React.FC<UserManagementProps> = ({ users, onUpdate, onDele
       password: u.password || '',
       whatsapp: u.whatsapp || '',
       role: u.role,
-      title: u.teacherTitle || 'Quran Lehrer',
+      title: u.teacherTitle || 'Yassarnal Quran Lehrer',
       gender: (u.gender as 'Lehrer' | 'Lehrerin') || 'Lehrer',
       selectedClasses: u.assignedClasses || []
     });

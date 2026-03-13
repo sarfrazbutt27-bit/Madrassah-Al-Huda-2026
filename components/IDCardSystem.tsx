@@ -21,7 +21,7 @@ const IDCardSystem: React.FC<IDCardSystemProps> = ({ user, users, students }) =>
   const isStudent = user.role === UserRole.STUDENT;
   const isTeacher = user.role === UserRole.TEACHER;
   const isAdmin = user.role === UserRole.PRINCIPAL;
-  const viewerAssignedClasses = user.assignedClasses || [];
+  const viewerAssignedClasses = useMemo(() => user.assignedClasses || [], [user.assignedClasses]);
   const currentYear = new Date().getFullYear();
 
   const [activeTab, setActiveTab] = useState<'teachers' | 'students' | 'parents'>(

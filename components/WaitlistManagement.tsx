@@ -10,11 +10,12 @@ import { WaitlistEntry, ParticipantInfo } from '../types';
 
 interface WaitlistManagementProps {
   waitlist: WaitlistEntry[];
-  onUpdate: (w: WaitlistEntry[]) => void;
+  onUpdate: (list: WaitlistEntry[], itemsToSync?: WaitlistEntry[]) => void;
+  onDelete: (id: string) => void;
 }
 
 const WaitlistManagement: React.FC<WaitlistManagementProps> = ({ 
-  waitlist, onUpdate
+  waitlist, onUpdate, onDelete
 }) => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
@@ -101,7 +102,7 @@ const WaitlistManagement: React.FC<WaitlistManagementProps> = ({
       } else {
         newList = [...waitlist, entry];
       }
-      onUpdate(newList);
+      onUpdate(newList, [entry]);
       setShowAddModal(false);
       setEditingEntry(null);
       resetForm();
@@ -146,7 +147,8 @@ const WaitlistManagement: React.FC<WaitlistManagementProps> = ({
     const names = entry.participants.map(p => p.firstName).join(' & ');
     const message = `Assalamu Alaikum ${entry.guardianName},\n\nhier spricht die Schulleitung der Madrassah Al-Huda Hamburg.\n\nWir laden Sie herzlich zu einem persönlichen Einstufungsgespräch für ${entry.type === 'ADULT' ? 'Sie' : `Ihre Kinder (${names})`} ein. \n\nBitte teilen Sie uns mit, wann Sie am kommenden Wochenende Zeit hätten.\n\nBarakallahu Feekum.`;
     window.open(`https://wa.me/${entry.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`, '_blank');
-    onUpdate(waitlist.map(w => w.id === entry.id ? { ...w, status: 'invited' } : w));
+    const updatedEntry: WaitlistEntry = { ...entry, status: 'invited' };
+    onUpdate(waitlist.map(w => w.id === entry.id ? updatedEntry : w), [updatedEntry]);
   };
 
   return (
@@ -237,13 +239,13 @@ const WaitlistManagement: React.FC<WaitlistManagementProps> = ({
                              <FileEdit size={14}/> Daten ändern
                            </button>
                            <button 
-                             onClick={() => { if(window.confirm('Vormerkung löschen?')) onUpdate(waitlist.filter(x => x.id !== w.id)) }} 
+                             onClick={() => { if(window.confirm('Vormerkung löschen?')) onDelete(w.id) }} 
                              className="hidden sm:flex p-2 text-gray-300 hover:text-red-500 transition-all items-center justify-center"
                            >
                              <Trash2 size={18}/>
                            </button>
                            <button 
-                             onClick={() => { if(window.confirm('Vormerkung löschen?')) onUpdate(waitlist.filter(x => x.id !== w.id)) }} 
+                             onClick={() => { if(window.confirm('Vormerkung löschen?')) onDelete(w.id) }} 
                              className="sm:hidden bg-red-50 text-red-500 px-4 py-3 rounded-2xl font-black uppercase text-[9px] tracking-widest flex items-center justify-center gap-2"
                            >
                              <Trash2 size={14}/> Löschen

@@ -43,7 +43,7 @@ const QuranTheoryViewer: React.FC<QuranTheoryViewerProps> = ({ user, resource, o
       setIsEditing(false);
     }
     lastResourceId.current = resource.id;
-  }, [resource.id]);
+  }, [resource.id, resource.lessons, resource.title, resource.url]);
 
   // Save draft to localStorage whenever it changes
   React.useEffect(() => {
@@ -228,7 +228,7 @@ const QuranTheoryViewer: React.FC<QuranTheoryViewerProps> = ({ user, resource, o
         }
       }
     }
-  }, [currentLesson]);
+  }, [currentLesson, isPlaying]);
 
   const openMiniPlayer = (lesson: Lesson) => {
     const directUrl = getDirectAudioUrl(lesson.audioUrl, 0);

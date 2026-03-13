@@ -5,7 +5,8 @@ import {
   Book, Clock, GraduationCap, Lock, ClipboardCheck, 
   ChevronRight, User as UserIcon, MessageCircle,
   CheckCircle2, ExternalLink,
-  IdCard, FolderOpen, Mic, Award, MessageSquare
+  IdCard, FolderOpen, Mic, Award, MessageSquare,
+  BookOpen
 } from 'lucide-react';
 import { Student, User, HomeworkAssignment, HomeworkAttempt, Resource, Grade, Attendance, UserRole, ClassConfig } from '../types';
 import { supabase } from '../lib/supabase';
@@ -36,19 +37,6 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({
   const pendingHomework = myHomework.filter(h => !attempts.some(a => a.assignmentId === h.id && a.studentId === user.id && a.isPerfect));
   
   const classTeachers = users.filter(u => u.role === UserRole.TEACHER && u.assignedClasses?.includes(myClass));
-
-  const [tajweedStats, setTajweedStats] = useState<{ count: number, avg: number }>({ count: 0, avg: 0 });
-
-  useEffect(() => {
-    const fetchTajweed = async () => {
-      const { data } = await supabase.from('tajweed_practice').select('accuracy').eq('student_id', user.id);
-      if (data && data.length > 0) {
-        const avg = data.reduce((acc, curr) => acc + curr.accuracy, 0) / data.length;
-        setTajweedStats({ count: data.length, avg: Math.round(avg) });
-      }
-    };
-    fetchTajweed();
-  }, [user.id]);
 
   return (
     <div className="space-y-10 animate-in fade-in duration-700 pb-20">
@@ -165,29 +153,6 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({
                     </div>
                  ))}
               </div>
-           </div>
-
-           <div className="bg-white p-8 rounded-[3rem] border border-gray-100 shadow-sm space-y-6">
-              <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] mb-2">Tajweed Fortschritt</h3>
-              <Link to="/tajweed-practice" className="block p-6 bg-gold-50 border border-gold-100 rounded-3xl group transition-all hover:shadow-xl relative overflow-hidden">
-                <div className="absolute top-0 right-0 p-4 opacity-10 text-gold-600"><Mic size={80} /></div>
-                <div className="relative z-10">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="p-2 bg-white rounded-xl shadow-sm">
-                      <Award className="text-gold-600" size={20} />
-                    </div>
-                    <span className="text-xl font-black text-madrassah-950 italic">{tajweedStats.avg}%</span>
-                  </div>
-                  <p className="text-[10px] font-black uppercase text-madrassah-950/60 tracking-widest mb-1">Ø Genauigkeit</p>
-                  <div className="w-full bg-white/50 h-1.5 rounded-full overflow-hidden mb-4">
-                    <div className="bg-gold-500 h-full rounded-full" style={{ width: `${tajweedStats.avg}%` }}></div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-[9px] font-bold text-madrassah-950 uppercase">{tajweedStats.count} Übungen</span>
-                    <span className="text-[9px] font-black uppercase text-gold-600 flex items-center gap-1">Üben <ChevronRight size={12} /></span>
-                  </div>
-                </div>
-              </Link>
            </div>
 
            <div className="bg-white p-8 rounded-[3rem] border border-gray-100 shadow-sm space-y-6">

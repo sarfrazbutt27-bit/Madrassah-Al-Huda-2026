@@ -76,7 +76,7 @@ const TheoryManager: React.FC<TheoryManagerProps> = ({
       }
       hasRestored.current = true;
     }
-  }, [resources]);
+  }, [resources, activeQuizResource]);
 
   // Update active resource if resources list changes (to keep reference fresh)
   useEffect(() => {
@@ -84,7 +84,7 @@ const TheoryManager: React.FC<TheoryManagerProps> = ({
       const updated = resources.find(r => r.id === activeQuizResource.id);
       if (updated) setActiveQuizResource(updated);
     }
-  }, [resources]);
+  }, [resources, activeQuizResource]);
 
   useEffect(() => {
     if (activeQuizResource) {
@@ -146,7 +146,7 @@ const TheoryManager: React.FC<TheoryManagerProps> = ({
   }, [currentPath, subjects]);
 
   const myClass = isStudent ? students.find(s => s.id === user.id)?.className : null;
-  const assignedClasses = user.assignedClasses || [];
+  const assignedClasses = useMemo(() => user.assignedClasses || [], [user.assignedClasses]);
 
   const accessibleResources = useMemo(() => {
     return resources.filter(r => {
@@ -335,8 +335,8 @@ const TheoryManager: React.FC<TheoryManagerProps> = ({
   return (
     <div className="space-y-8 animate-in fade-in duration-700 pb-24">
       {activeQuizResource ? (
-        <div className={(activeQuizResource.subject === 'Quran' || activeQuizResource.subject === "Qur'an") ? "max-w-7xl mx-auto" : "max-w-4xl mx-auto"}>
-          {(activeQuizResource.subject === 'Quran' || activeQuizResource.subject === "Qur'an") ? (
+        <div className={(activeQuizResource.subject === 'Yassarnal Quran' || activeQuizResource.subject === 'Quran' || activeQuizResource.subject === "Qur'an") ? "max-w-7xl mx-auto" : "max-w-4xl mx-auto"}>
+          {(activeQuizResource.subject === 'Yassarnal Quran' || activeQuizResource.subject === 'Quran' || activeQuizResource.subject === "Qur'an") ? (
             <QuranTheoryViewer 
               user={user}
               resource={activeQuizResource}
@@ -711,7 +711,7 @@ const TheoryManager: React.FC<TheoryManagerProps> = ({
                        </div>
                     </div>
                    {/* Quran Lessons Section */}
-                  {(newRes.subject === 'Quran' || newRes.subject === "Qur'an") && (
+                  {(newRes.subject === 'Yassarnal Quran' || newRes.subject === 'Quran' || newRes.subject === "Qur'an") && (
                     <div className="space-y-6 bg-emerald-50/50 p-8 rounded-[2.5rem] border border-emerald-100">
                        <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3 text-emerald-600">

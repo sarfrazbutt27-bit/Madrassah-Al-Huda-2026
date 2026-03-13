@@ -52,7 +52,7 @@ const GradingSystem: React.FC<GradingSystemProps> = ({
   const navigate = useNavigate();
   const isTeacher = user.role === UserRole.TEACHER;
   const isPrincipal = user.role === UserRole.PRINCIPAL;
-  const assignedClasses = user.assignedClasses || [];
+  const assignedClasses = useMemo(() => user.assignedClasses || [], [user.assignedClasses]);
 
   const [activeTab, setActiveTab] = useState<'overview' | 'participation'>('overview');
   const [selectedTerm, setSelectedTerm] = useState<'Halbjahr' | 'Abschluss'>('Halbjahr');

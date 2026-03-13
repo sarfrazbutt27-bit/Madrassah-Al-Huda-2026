@@ -21,7 +21,7 @@ const TeacherSalaryPrintView: React.FC<TeacherSalaryPrintViewProps> = ({ users }
   const getTeacherSalary = (teacher: User) => {
     const title = teacher.teacherTitle;
     if (title === 'Alim' || title === 'Alima' || title === 'Imam') return 500;
-    if (title === 'Quran Lehrer' || title === 'Tajweed Lehrer' || title === 'Arabisch Lehrer') return 300;
+    if (title === 'Yassarnal Quran Lehrer' || title === 'Tajweed Lehrer' || title === 'Arabisch Lehrer') return 300;
     if (title === 'Aushelfer') return 200;
     return 300;
   };

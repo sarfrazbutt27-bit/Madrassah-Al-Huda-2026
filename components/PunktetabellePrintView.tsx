@@ -33,7 +33,7 @@ const PunktetabellePrintView: React.FC<Props> = ({ students, grades, classConfig
       return config.selectedSubjects;
     }
     // Default fallback if none selected
-    return ['Quran', 'Tajweed', 'Hifz', 'Fiqh', 'Sierah', 'Akhlaq'];
+    return ['Yassarnal Quran', 'Tajweed', 'Hifz', 'Fiqh', 'Sierah', 'Akhlaq'];
   }, [config]);
 
   const getPoints = (studentId: string, subject: string) => {

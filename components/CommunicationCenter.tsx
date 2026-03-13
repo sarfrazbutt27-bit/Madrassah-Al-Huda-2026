@@ -113,7 +113,12 @@ const CommunicationCenter: React.FC<CommunicationCenterProps> = ({ students = []
   , [students, studentSearch]);
 
   const getPortalUrl = () => {
-    const origin = window.location.origin;
+    let origin = window.location.origin;
+    // Fix: Always use the public 'pre' origin for sharing with parents
+    if (origin.includes('ais-dev-')) {
+      origin = origin.replace('ais-dev-', 'ais-pre-');
+    }
+    
     const pathname = window.location.pathname.endsWith('/') 
       ? window.location.pathname 
       : window.location.pathname + '/';

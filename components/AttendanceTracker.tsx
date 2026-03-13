@@ -41,7 +41,7 @@ const AttendanceTracker: React.FC<AttendanceTrackerProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [riskFilter, setRiskFilter] = useState<'all' | 'risk'>('all');
   
-  const assignedClasses = user.assignedClasses || [];
+  const assignedClasses = useMemo(() => user.assignedClasses || [], [user.assignedClasses]);
   
   // Verfügbare Klassen basierend auf Rolle
   const availableClasses = useMemo(() => {
@@ -113,7 +113,7 @@ const AttendanceTracker: React.FC<AttendanceTrackerProps> = ({
       
       return matchesSearch && s.status === 'active';
     }).sort((a, b) => (a.lastName || '').localeCompare(b.lastName || ''));
-  }, [students, selectedClass, searchTerm, riskFilter, attendance, isStudent, isAdmin, isTeacher, assignedClasses, user.id, lessonModel]);
+  }, [students, selectedClass, searchTerm, riskFilter, attendance, isStudent, isTeacher, assignedClasses, user.id, lessonModel]);
 
   const toggleAttendance = (studentId: string, date: string, current: Attendance['status'] | undefined) => {
     if (isStudent || isHolidayMode) return; // Schüler dürfen nichts ändern, Ferienmodus sperrt alles

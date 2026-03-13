@@ -17,7 +17,7 @@ export const useProgress = (userId?: string) => {
         .eq('user_id', userId);
 
       if (error) throw error;
-      setProgress(data.map(p => ({
+      setProgress(data.map((p: any) => ({
         userId: p.user_id,
         curriculumItemId: p.curriculum_item_id,
         isCompleted: p.is_completed,

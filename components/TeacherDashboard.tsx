@@ -26,7 +26,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [zoomedQr, setZoomedQr] = useState<{ url: string, className: string } | null>(null);
-  const assignedClasses = user.assignedClasses || [];
+  const assignedClasses = useMemo(() => user.assignedClasses || [], [user.assignedClasses]);
   
   const myStudents = useMemo(() => {
     return students.filter(s => 
@@ -286,6 +286,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                 )}
               </div>
            </div>
+
 
            <div className="bg-white p-10 rounded-[3.5rem] border border-gray-100 shadow-sm space-y-6">
               <div className="flex items-center gap-4">

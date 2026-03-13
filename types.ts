@@ -5,7 +5,7 @@ export enum UserRole {
   STUDENT = 'STUDENT'
 }
 
-export type TeacherTitle = 'Alim' | 'Alima' | 'Imam' | 'Quran Lehrer' | 'Tajweed Lehrer' | 'Arabisch Lehrer' | 'Aushelfer';
+export type TeacherTitle = 'Alim' | 'Alima' | 'Imam' | 'Quran Lehrer' | 'Tajweed Lehrer' | 'Arabisch Lehrer' | 'Aushelfer' | 'Yassarnal Quran Lehrer';
 export type Gender = 'Junge' | 'Mädchen' | 'Mann' | 'Frau';
 export type StudentStatus = 'active' | 'inactive' | 'suspended' | 'graduated' | 'removed_red_list';
 export type PaymentMethod = 'Bar' | 'Überweisung';
@@ -383,4 +383,42 @@ export interface QuranPracticeRecord {
   repeatNeeded: boolean;
   practiceCount: number;
   lastPracticedAt: string;
+}
+
+export interface QaidaLesson {
+  id: string;
+  lessonNumber: number;
+  title: string;
+  description?: string;
+  createdAt: string;
+}
+
+export interface QaidaContent {
+  id: string;
+  lessonId: string;
+  arabicText: string;
+  transliteration?: string;
+  audioUrl?: string;
+  tajweedRule?: 'madd' | 'ghunnah' | 'qalqalah' | 'noon_sakinah' | 'meem_sakinah';
+  explanation?: string;
+  sortOrder: number;
+}
+
+export interface QaidaProgress {
+  id: string;
+  studentId: string;
+  lessonId: string;
+  completed: boolean;
+  score: number;
+  lastPracticedAt: string;
+}
+
+export interface QaidaAssignment {
+  id: string;
+  teacherId: string;
+  studentId: string;
+  lessonId: string;
+  assignedAt: string;
+  dueDate?: string;
+  status: 'assigned' | 'in-progress' | 'completed';
 }

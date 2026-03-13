@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { ShieldCheck, User as UserIcon, Eye, EyeOff, Lock, AlertCircle, ArrowRight, Sparkles, Loader2 } from 'lucide-react';
+import { ShieldCheck, User as UserIcon, Eye, EyeOff, Lock, AlertCircle, ArrowRight, Sparkles, Loader2, BookOpen } from 'lucide-react';
 import { User, UserRole, Student } from '../types';
 import { supabase } from '../lib/supabase';
 import LogoIcon from './LogoIcon';
@@ -153,6 +153,13 @@ const Login: React.FC<LoginProps> = ({ onLogin, logoUrl }) => {
           </form>
           
           <div className="pt-6 border-t border-gray-100 flex flex-col items-center gap-4">
+             <button 
+               type="button" 
+               onClick={() => window.location.hash = '#/yassarnal-quran'}
+               className="w-full flex items-center justify-center gap-2 text-[10px] font-black text-madrassah-950 uppercase tracking-widest hover:text-gold-600 transition-colors py-2 border border-dashed border-gray-200 rounded-xl"
+             >
+               <BookOpen size={14} /> Yassarnal Quran Üben (Ohne Login)
+             </button>
              <div className="flex items-center gap-2 text-[9px] font-black text-gold-600 uppercase tracking-widest">
                 <Sparkles size={12} /> Exzellenz in Bildung
              </div>

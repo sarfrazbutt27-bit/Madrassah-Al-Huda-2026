@@ -33,7 +33,11 @@ const DataUpdateForm: React.FC<DataUpdateFormProps> = ({ students, onUpdateStude
 
   // Hochpräzise Link-Generierung für WhatsApp
   const getPortalUrl = () => {
-    const origin = window.location.origin;
+    let origin = window.location.origin;
+    // Fix: Always use the public 'pre' origin for sharing
+    if (origin.includes('ais-dev-')) {
+      origin = origin.replace('ais-dev-', 'ais-pre-');
+    }
     const pathname = window.location.pathname.endsWith('/') 
       ? window.location.pathname 
       : window.location.pathname + '/';

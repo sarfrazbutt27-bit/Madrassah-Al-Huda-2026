@@ -81,6 +81,10 @@
       ::-webkit-scrollbar-thumb { background: #3f004230; border-radius: 10px; }
       ::-webkit-scrollbar-thumb:hover { background: #3f004260; }
 
+      input, textarea, select {
+        color: #1a1a1a !important;
+      }
+
       .fade-in { animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
       @keyframes fadeIn {
         from { opacity: 0; transform: translateY(20px); }
@@ -88,8 +92,8 @@
       }
 
       /* Tajweed Colors for Quran.com & Tanzil Markup */
-      /* Ghunnah & Lam Jalalah - Red */
-      .tajweed-ghunnah, .ghn, .ghunnah, [class*="ghn"], .lam, .lam_jalalah, [class*="lam"], .tajweed-lam_jalalah { color: #ff0000 !important; font-weight: bold; }
+      /* Ghunnah & Lam Jalalah - Dark Purple */
+      .tajweed-ghunnah, .ghn, .ghunnah, [class*="ghn"], .lam, .lam_jalalah, [class*="lam"], .tajweed-lam_jalalah { color: #701a75 !important; font-weight: bold; }
       
       /* Madd Rules - Blue/Green */
       .tajweed-madd_obligatory, .mnd, .madd_obligatory, .m_o, [class*="mnd"], [class*="m_o"], .m_a, [class*="m_a"], .tajweed-madd_obligatory { color: #2196f3 !important; }
@@ -139,8 +143,8 @@
       /* Tanzil specific classes with extreme specificity */
       .quran-text-container .tz-h, .quran-text-container .tz-ham { color: #888888 !important; } /* Hamzat Wasl - Gray */
       .quran-text-container .tz-s, .quran-text-container .tz-sls { color: #ff4400 !important; } /* Silah - Orange Red */
-      .quran-text-container .tz-l, .quran-text-container .tz-lam { color: #cc0000 !important; font-weight: bold !important; } /* Lam Jalalah - Dark Red */
-      .quran-text-container .tz-n, .quran-text-container .tz-ghn { color: #ff0000 !important; font-weight: bold !important; } /* Ghunnah - Red */
+      .quran-text-container .tz-l, .quran-text-container .tz-lam { color: #3f0042 !important; font-weight: bold !important; } /* Lam Jalalah - Dark Purple */
+      .quran-text-container .tz-n, .quran-text-container .tz-ghn { color: #701a75 !important; font-weight: bold !important; } /* Ghunnah - Dark Purple */
       .quran-text-container .tz-v, .quran-text-container .tz-mnd { color: #0000ff !important; font-weight: bold !important; } /* Madd Obligatory - Blue */
       .quran-text-container .tz-w, .quran-text-container .tz-m_p { color: #00aa00 !important; font-weight: bold !important; } /* Madd Permissible - Green */
       .quran-text-container .tz-y, .quran-text-container .tz-m_l { color: #0000aa !important; font-weight: bold !important; } /* Madd Long - Dark Blue */

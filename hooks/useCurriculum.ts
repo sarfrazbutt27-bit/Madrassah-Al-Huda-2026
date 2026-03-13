@@ -16,7 +16,7 @@ export const useCurriculum = () => {
         .order('start_date', { ascending: false });
 
       if (error) throw error;
-      setYears(data.map(y => ({
+      setYears(data.map((y: any) => ({
         id: y.id,
         label: y.label,
         startDate: y.start_date,
@@ -41,7 +41,7 @@ export const useCurriculum = () => {
         .order('order_index', { ascending: true });
 
       if (error) throw error;
-      setItems(data.map(i => ({
+      setItems(data.map((i: any) => ({
         id: i.id,
         yearId: i.year_id,
         subject: i.subject,
@@ -180,13 +180,11 @@ export const useCurriculum = () => {
       
       if (error) throw error;
       
-      const uniqueLevels = Array.from(new Set(data.map(d => d.level)));
-      setAvailableLevels(() => {
-        // Core J/M levels plus specialized courses as defaults, plus whatever is in the DB
-        const defaults = ['J-1/M-1', 'J-2/M-2', 'J-3/M-3', 'J-4/M-4', 'J-5/M-5', 'J-6/M-6', 'Imam Kurs', 'Ijaza Kurs', 'Ilmiyyah Kurs', 'Hifz Kurs', 'Arabisch Modul 1', 'Arabisch Modul 2', 'Arabisch Modul 3'];
-        const combined = Array.from(new Set([...defaults, ...uniqueLevels]));
-        return combined.sort();
-      });
+      const uniqueLevels: string[] = (data || []).map((d: any) => String(d.level));
+      // Core J/M levels plus specialized courses as defaults, plus whatever is in the DB
+      const defaults: string[] = ['J-1/M-1', 'J-2/M-2', 'J-3/M-3', 'J-4/M-4', 'J-5/M-5', 'J-6/M-6', 'Imam Kurs', 'Ijaza Kurs', 'Ilmiyyah Kurs', 'Hifz Kurs', 'Arabisch Modul 1', 'Arabisch Modul 2', 'Arabisch Modul 3'];
+      const combined: string[] = Array.from(new Set([...defaults, ...uniqueLevels]));
+      setAvailableLevels(combined.sort());
     } catch (err) {
       console.error("Error fetching levels:", err);
     }

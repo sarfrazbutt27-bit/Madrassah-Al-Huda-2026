@@ -335,7 +335,7 @@ const CurriculumPage: React.FC<CurriculumPageProps> = ({ user }) => {
         </div>
 
         <div className="space-y-10">
-          {['Quran', 'Tajweed', 'Hifz', 'Fiqh', 'Sierah', 'Arabisch', 'Arabisch Modul 1', 'Arabisch Modul 2', 'Arabisch Modul 3', 'Akhlaq', 'Hadieth', 'Usul-ul-Hadieth', 'Aqeedah', 'Usul-ul-Fiqh', 'Ilmiyyah', 'Imam', 'Ziele'].map(subject => {
+          {['Yassarnal Quran', 'Tajweed', 'Hifz', 'Fiqh', 'Sierah', 'Arabisch', 'Arabisch Modul 1', 'Arabisch Modul 2', 'Arabisch Modul 3', 'Akhlaq', 'Hadieth', 'Usul-ul-Hadieth', 'Aqeedah', 'Usul-ul-Fiqh', 'Ilmiyyah', 'Imam', 'Ziele'].map(subject => {
             const subjectItems = filteredItems.filter(i => i.subject === subject);
             if (subjectItems.length === 0) return null;
 

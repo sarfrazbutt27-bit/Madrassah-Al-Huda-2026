@@ -7,7 +7,7 @@ import {
   Euro as EuroIcon, RefreshCw as RefreshCwIcon, 
   Briefcase as BriefcaseIcon, Flame as FlameIcon,
   Award as AwardIcon, Printer as PrinterIcon, Sparkles, ChevronRight, GraduationCap as ExamIcon,
-  Library
+  Library, BookOpen
 } from 'lucide-react';
 import LogoIcon from './LogoIcon';
 

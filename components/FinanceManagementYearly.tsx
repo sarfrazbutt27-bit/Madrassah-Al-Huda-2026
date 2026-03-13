@@ -21,14 +21,14 @@ const FinanceManagementYearly: React.FC<FinanceManagementYearlyProps> = ({ stude
   const [isGeneratingAi, setIsGeneratingAi] = useState(false);
   const [aiAnalysis, setAiAnalysis] = useState<string | null>(null);
 
-  const months = [
+  const months = useMemo(() => [
     'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 
     'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'
-  ];
+  ], []);
 
   const activeStudents = useMemo(() => students.filter(s => s.status === 'active'), [students]);
 
-  const getStudentFee = (student: Student) => {
+  const getStudentFee = React.useCallback((student: Student) => {
     if (!student || !student.className) return 0;
     
     // Special class "Ilmiya" always 100€
@@ -40,14 +40,14 @@ const FinanceManagementYearly: React.FC<FinanceManagementYearlyProps> = ({ stude
     if (count === 1) return 30;
     if (count === 2) return 25; // 50 total for family of 2
     return 20; // 20 each for family of 3 or more
-  };
+  }, [activeStudents]);
 
-  const getTeacherSalary = (teacher: User) => {
+  const getTeacherSalary = React.useCallback((teacher: User) => {
     const title = teacher.teacherTitle;
     if (title === 'Alim' || title === 'Alima' || title === 'Imam') return 500;
-    if (title === 'Quran Lehrer' || title === 'Tajweed Lehrer' || title === 'Arabisch Lehrer') return 300;
+    if (title === 'Yassarnal Quran Lehrer' || title === 'Tajweed Lehrer' || title === 'Arabisch Lehrer') return 300;
     return 200;
-  };
+  }, []);
 
   const yearlyStats = useMemo(() => {
     const monthlyData = months.map((monthName, index) => {
@@ -92,7 +92,7 @@ const FinanceManagementYearly: React.FC<FinanceManagementYearlyProps> = ({ stude
       totalExpectedExpenses,
       netBalance: totalIncome - totalExpenses 
     };
-  }, [activeStudents, users, selectedYear]);
+  }, [activeStudents, users, selectedYear, getStudentFee, getTeacherSalary, months]);
 
   const generateAiAudit = async () => {
     setIsGeneratingAi(true);

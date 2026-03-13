@@ -11,7 +11,7 @@ interface ClassWhatsAppManagerProps {
 
 const ClassWhatsAppManager: React.FC<ClassWhatsAppManagerProps> = ({ classConfigs, onUpdate, user }) => {
   const isAdmin = user.role === UserRole.PRINCIPAL;
-  const assignedClasses = user.assignedClasses || [];
+  const assignedClasses = useMemo(() => user.assignedClasses || [], [user.assignedClasses]);
 
   const [editingLinks, setEditingLinks] = useState<Record<string, string>>(() => {
     const map: Record<string, string> = {};
@@ -19,11 +19,11 @@ const ClassWhatsAppManager: React.FC<ClassWhatsAppManagerProps> = ({ classConfig
     return map;
   });
 
-  const staticClasses = [
+  const staticClasses = useMemo(() => [
     'J-1', 'J-2', 'J-3', 'J-4', 'J-5', 'J-6', 'J-1a', 'J-1b', 'J-Imam', 'J-Ijazah', 'J-Ilmiyyah', 'J-Hifz',
     'M-1', 'M-2', 'M-3', 'M-4', 'M-5', 'M-6', 'M-1a', 'M-1b', 'M-Imam', 'M-Ijazah', 'M-Ilmiyyah', 'M-Hifz',
     'Arabisch Modul 1', 'Arabisch Modul 2', 'Arabisch Modul 3'
-  ];
+  ], []);
 
   // Filter: Nur zugewiesene Klassen für Lehrer, alle für Schulleiter
   const visibleClasses = useMemo(() => {
